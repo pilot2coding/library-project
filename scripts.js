@@ -2,11 +2,12 @@
 let bookFormCard = null;
 let myLibrary = [];
 
-// function that uses a button to create a form where the user inputs the required fields to add a new book
+// function that uses a button to create a form where the user inpufuckts the required fields to add a new book
 function createBookInterface(){
 
     // creates the div where the inputs will go
     const card = document.createElement("div");
+    card.id = 'book-interface';
     bookFormCard = card;
     
     // adding elements to card div
@@ -18,6 +19,9 @@ function createBookInterface(){
     const addBookButton = document.createElement("button");
     addBookButton.innerText = "Add Book to Library";
     addBookButton.id = "add-button";
+    addBookButton.type = "button";
+
+    // addBookButton event listener
     addBookButton.addEventListener('click', function(){
         bookToLibrary();
     });
@@ -41,8 +45,21 @@ function createBookInterface(){
         });
             
     }
+
+    
     // Calls the function
    createElements(elementsArray, card);
+
+   // toggle read checkbox
+   let readButtonLabel = document.createElement('label');
+   readButtonLabel.innerText = 'Read?'
+   const readButton = document.createElement("input")
+   readButton.type = "checkbox";
+   readButton.id = "form-checkbox";
+   card.appendChild(readButtonLabel);
+   card.appendChild(readButton);
+
+    //
 
    // appends the elements to the main div
    card.appendChild(addBookButton);
@@ -62,22 +79,30 @@ document.querySelector('.button').addEventListener("click", function(){
 })
 
 // book constructor function
-function Book(title, author, pages, id){
+function Book(title, author, pages, isRead){
     this.title = title;
     this.author = author;
     this.pages = pages;
+    this.isRead = isRead;
     this.id = crypto.randomUUID();
 }
 
 // function that adds the values that the user inputs into the library
 function bookToLibrary(){
     // gets the values from the inputs and creates a new book
-    let bookAuthor = document.getElementById('author').value;
-    let bookTitle = document.getElementById('title').value;
-    let bookPages = document.getElementById('pages').value;
-    let newBook = new Book(bookTitle, bookAuthor, bookPages);
+    let bookAuthor = document.getElementById('author').value.trim();
+    let bookTitle = document.getElementById('title').value.trim();
+    let bookPages = document.getElementById('pages').value.trim();
+    
 
-    // adds the book to the library array
+    // creates form validation
+       if(!bookAuthor || !bookTitle || !bookPages || bookPages <= 0){
+        alert("Please, introduce valid information.")
+        return;
+    };
+
+    // creates the book and adds it to the library array
+    let newBook = new Book(bookTitle, bookAuthor, bookPages);
     myLibrary.push(newBook);
 
     // resets the input values
@@ -85,10 +110,11 @@ function bookToLibrary(){
     document.getElementById('title').value = "";
     document.getElementById('pages').value = "";
 
+   
     // gets the library div and creates new divs, called library cards
     const theLibrary = document.getElementById('library');
     const libraryCard = document.createElement('div');
-    libraryCard.id = 'library-card';
+    libraryCard.classList.add('library-card');
     libraryCard.setAttribute('data-id', newBook.id);
 
     // creates new HTML elements and fills them with the input values
@@ -136,6 +162,7 @@ function deleteLibraryCard(libraryCard){
     console.log(myLibrary);
     return myLibrary;
 }
+
 
 
 
