@@ -1,6 +1,6 @@
 // global variables
 let bookFormCard = null;
-const myLibrary = [];
+let myLibrary = [];
 
 // function that uses a button to create a form where the user inputs the required fields to add a new book
 function createBookInterface(){
@@ -89,6 +89,7 @@ function bookToLibrary(){
     const theLibrary = document.getElementById('library');
     const libraryCard = document.createElement('div');
     libraryCard.id = 'library-card';
+    libraryCard.setAttribute('data-id', newBook.id);
 
     // creates new HTML elements and fills them with the input values
     let theTitle = document.createElement('h2');
@@ -109,12 +110,32 @@ function bookToLibrary(){
 
     // adds a remove button, which will be useful to remove the cards from the div
     removeButton = document.createElement('button');
-    removeButton.id = 'remove-button';
+    removeButton.id = 'remove-button' + newBook.id;
     removeButton.innerText = 'Delete Book';
     libraryCard.append(removeButton);
     
+    // uses an event listener to call the function that deletes the card
+    removeButton.addEventListener("click", function(){
+        deleteLibraryCard(this.parentElement);
+    })
 
     theLibrary.appendChild(libraryCard);
+    console.log(myLibrary)
 
 }
+
+// function that erases the book from the library div and the library array
+function deleteLibraryCard(libraryCard){
+    libraryCard.parentElement.removeChild(libraryCard);
+
+    let cardID = libraryCard.getAttribute("data-id");
+
+    let filteredLibrary = myLibrary.filter(book=> book.id !== cardID);
+    myLibrary = filteredLibrary;
+
+    console.log(myLibrary);
+    return myLibrary;
+}
+
+
 
