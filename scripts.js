@@ -17,13 +17,18 @@ function createBookInterface(){
 
     // declare new button and use it to add elements to the library
     const addBookButton = document.createElement("button");
-    addBookButton.innerText = "Add Book to Library";
+    addBookButton.innerText = "Add Book";
     addBookButton.id = "add-button";
     addBookButton.type = "button";
 
     // addBookButton event listener
     addBookButton.addEventListener('click', function(){
-        bookToLibrary();
+        /*bookToLibrary();
+        renderLibraryItem(newBook);*/
+        const newBook = bookToLibrary();
+        if(newBook){
+            renderLibraryItem(newBook);
+        }
     });
 
     // function that loops through an array to add elements to the div
@@ -50,15 +55,27 @@ function createBookInterface(){
    createElements(elementsArray, card);
 
    // toggle read checkbox and appendment to the card
-   let readButtonLabel = document.createElement('label');
-   readButtonLabel.innerText = 'Read?'
-   const readButton = document.createElement("input")
-   readButton.type = "checkbox";
-   readButton.id = "form-checkbox";
-   card.appendChild(readButtonLabel);
-   card.appendChild(readButton);
+   let readText = document.createElement('span');
+   readText.innerText = 'Read?'
+   const toggleContainer = document.createElement('div')
+   toggleContainer.classList.add('toggle-switch');
+   
+   const readCheckbox = document.createElement("input")
+   readCheckbox.type = "checkbox";
+   readCheckbox.id = "form-checkbox";
+   readCheckbox.classList.add("toggle-checkbox");
+   card.appendChild(readText);
+   card.appendChild(readCheckbox);
+
+   const toggleLabel = document.createElement("label");
+   toggleLabel.setAttribute("for", "form-checkbox");
+
+   toggleContainer.append(readCheckbox);
+   toggleContainer.append(toggleLabel);
 
    // appends the elements to the main div
+   card.appendChild(readText);
+   card.appendChild(toggleContainer);
    card.appendChild(addBookButton);
    document.getElementById('book-input-section').appendChild(card);
    return card;
@@ -85,7 +102,25 @@ function Book(title, author, pages, isRead){
     this.id = crypto.randomUUID();
 }
 
-// function that adds the values that the user inputs into the library
+// testing books
+const onWar = new Book('On War - Volume 1', 'Carl von Clausewitz',
+    874, true
+);
+const onChina = new Book('On China', 'Henry Kissinger', 1375, false);
+
+const theRepublic = new Book('The Republic', 'Plato', 973, true)
+
+let testBookArray = [onWar, onChina, theRepublic];
+
+testBookArray.forEach(book =>{
+    myLibrary.push(book);
+})
+
+myLibrary.forEach(book=> {
+    renderLibraryItem(book);
+})
+
+// adds the new book to the library
 function bookToLibrary(){
     // gets the values from the inputs and creates a new book
     let bookAuthor = document.getElementById('author').value.trim();
@@ -108,6 +143,11 @@ function bookToLibrary(){
     document.getElementById('title').value = "";
     document.getElementById('pages').value = "";
 
+    return newBook;
+}
+
+// renders the book inside the graphic interface
+function renderLibraryItem(newBook){
     // gets the library div and creates new divs, called library cards
     const theLibrary = document.getElementById('library');
     const libraryCard = document.createElement('div');
@@ -199,6 +239,14 @@ function toggleCard(libraryCard){
     } else {
         libraryCard.id = 'unread-book';
     }
+
+    let cardID = libraryCard.getAttribute("data-id");
+
+    const bookFound = myLibrary.find(book => cardID === book.id);
+    if(bookFound){
+        bookFound.isRead = cardCheckbox;
+    }
+    console.log(myLibrary);
 }
 
 
