@@ -184,7 +184,36 @@ function renderLibraryItem(newBook){
         libraryCard.appendChild(item);
     });   
 
+    // old and deprecated code
+    /*let toggleButton = document.createElement('input');
+    toggleButton.type = 'checkbox';
+    toggleButton.classList.add('toggle-checkbox');
+    toggleButton.checked = newBook.isRead;
+    let toggleLabel = document.createElement('h5');
+    toggleLabel.innerText = 'Read?';
+    libraryCard.append(toggleButton);
+    libraryCard.append(toggleLabel);*/
 
+    // add a toggle read checkbox and its label
+    let cardReadText = document.createElement('span');
+    cardReadText.innerText = 'Read?';
+    const cardToggleContainer = document.createElement('div');
+    cardToggleContainer.classList.add('toggle-card-container');
+
+    const cardReadCheckbox = document.createElement('input');
+    cardReadCheckbox.type = 'checkbox';
+    cardReadCheckbox.id = 'card-checkbox-' + newBook.id;
+    cardReadCheckbox.classList.add('toggle-card-checkbox');
+    cardReadCheckbox.checked = newBook.isRead;
+
+    const cardToggleLabel = document.createElement('label');
+    cardToggleLabel.setAttribute("for", "card-checkbox-" + newBook.id);
+    
+    cardToggleContainer.appendChild(cardReadCheckbox);
+    cardToggleContainer.appendChild(cardToggleLabel);
+
+    libraryCard.append(cardReadText);
+    libraryCard.append(cardToggleContainer);
 
     // adds a remove button, which will be useful to remove the cards from the div
     let removeButton = document.createElement('button');
@@ -197,20 +226,10 @@ function renderLibraryItem(newBook){
         deleteLibraryCard(this.parentElement);
     })
 
-   // add a toggle read checkbox and its label
-    let toggleButton = document.createElement('input');
-    toggleButton.type = 'checkbox';
-    toggleButton.classList.add('toggle-card');
-    toggleButton.checked = newBook.isRead;
-    let toggleLabel = document.createElement('h5');
-    toggleLabel.innerText = 'Read?';
-    libraryCard.append(toggleButton);
-    libraryCard.append(toggleLabel);
-
     // appends everything into the library div
     theLibrary.appendChild(libraryCard);
 
-    libraryCard.querySelector('.toggle-card').addEventListener('click', function(){
+    libraryCard.querySelector('.toggle-card-checkbox').addEventListener('click', function(){
         toggleCard(libraryCard);
     })
 
@@ -233,7 +252,7 @@ function deleteLibraryCard(libraryCard){
 
 // function that modifies the library array isRead status and the class of the card
 function toggleCard(libraryCard){
-    let cardCheckbox = libraryCard.querySelector('.toggle-card').checked;
+    let cardCheckbox = libraryCard.querySelector('.toggle-card-checkbox').checked;
     if(cardCheckbox === true){
         libraryCard.id = 'read-book';
     } else {
