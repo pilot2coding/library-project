@@ -2,7 +2,7 @@
 let bookFormCard = null;
 let myLibrary = [];
 
-// function that uses a button to create a form where the user inpufuckts the required fields to add a new book
+// function that uses a button to create a form where the user inputs the required fields to add a new book
 function createBookInterface(){
 
     // creates the div where the inputs will go
@@ -46,11 +46,10 @@ function createBookInterface(){
             
     }
 
-    
     // Calls the function
    createElements(elementsArray, card);
 
-   // toggle read checkbox
+   // toggle read checkbox and appendment to the card
    let readButtonLabel = document.createElement('label');
    readButtonLabel.innerText = 'Read?'
    const readButton = document.createElement("input")
@@ -59,14 +58,13 @@ function createBookInterface(){
    card.appendChild(readButtonLabel);
    card.appendChild(readButton);
 
-    //
-
    // appends the elements to the main div
    card.appendChild(addBookButton);
    document.getElementById('book-input-section').appendChild(card);
    return card;
 }
 
+// event listener that opens and closes the form
 document.querySelector('.button').addEventListener("click", function(){
     if(bookFormCard===null){
         createBookInterface(this)
@@ -93,7 +91,7 @@ function bookToLibrary(){
     let bookAuthor = document.getElementById('author').value.trim();
     let bookTitle = document.getElementById('title').value.trim();
     let bookPages = document.getElementById('pages').value.trim();
-    
+    let bookRead = document.getElementById('form-checkbox').checked;
 
     // creates form validation
        if(!bookAuthor || !bookTitle || !bookPages || bookPages <= 0){
@@ -102,7 +100,7 @@ function bookToLibrary(){
     };
 
     // creates the book and adds it to the library array
-    let newBook = new Book(bookTitle, bookAuthor, bookPages);
+    let newBook = new Book(bookTitle, bookAuthor, bookPages, bookRead);
     myLibrary.push(newBook);
 
     // resets the input values
@@ -110,32 +108,46 @@ function bookToLibrary(){
     document.getElementById('title').value = "";
     document.getElementById('pages').value = "";
 
-   
     // gets the library div and creates new divs, called library cards
     const theLibrary = document.getElementById('library');
     const libraryCard = document.createElement('div');
     libraryCard.classList.add('library-card');
     libraryCard.setAttribute('data-id', newBook.id);
 
+    // for CSS purposes, an id of the card will be modified according to the read status
+    if(newBook.isRead === true){
+        libraryCard.id = 'read-book';
+    } else {
+        libraryCard.id = 'unread-book';
+    }
+
     // creates new HTML elements and fills them with the input values
-    let theTitle = document.createElement('h2');
+    let theTitle = document.createElement('h3');
     theTitle.innerText = newBook.title;
+    let theTitleLabel = document.createElement('h5');
+    theTitleLabel.innerText = 'Title';
 
     let theAuthor = document.createElement('h3')
     theAuthor.innerText = newBook.author;
+    let theAuthorLabel = document.createElement('h5');
+    theAuthorLabel.innerText = 'Author';
 
     let thePages = document.createElement('h3');
     thePages.innerText = newBook.pages;
+    let thePagesLabel = document.createElement('h5');
+    thePagesLabel.innerText = 'Pages';
 
     // an array to easily append the elements into the library cards
-    itemsArray = [theTitle, theAuthor, thePages];
-
+    itemsArray = [theTitle, theTitleLabel, theAuthor, theAuthorLabel, thePages, thePagesLabel];
+    
     itemsArray.forEach(item =>{
-        libraryCard.appendChild(item)
-    });
+        libraryCard.appendChild(item);
+    });   
+
+
 
     // adds a remove button, which will be useful to remove the cards from the div
-    removeButton = document.createElement('button');
+    let removeButton = document.createElement('button');
     removeButton.id = 'remove-button' + newBook.id;
     removeButton.innerText = 'Delete Book';
     libraryCard.append(removeButton);
@@ -145,7 +157,23 @@ function bookToLibrary(){
         deleteLibraryCard(this.parentElement);
     })
 
+   // add a toggle read checkbox and its label
+    let toggleButton = document.createElement('input');
+    toggleButton.type = 'checkbox';
+    toggleButton.classList.add('toggle-card');
+    toggleButton.checked = newBook.isRead;
+    let toggleLabel = document.createElement('h5');
+    toggleLabel.innerText = 'Read?';
+    libraryCard.append(toggleButton);
+    libraryCard.append(toggleLabel);
+
+    // appends everything into the library div
     theLibrary.appendChild(libraryCard);
+
+    libraryCard.querySelector('.toggle-card').addEventListener('click', function(){
+        toggleCard(libraryCard);
+    })
+
     console.log(myLibrary)
 
 }
@@ -163,6 +191,15 @@ function deleteLibraryCard(libraryCard){
     return myLibrary;
 }
 
+// function that modifies the library array isRead status and the class of the card
+function toggleCard(libraryCard){
+    let cardCheckbox = libraryCard.querySelector('.toggle-card').checked;
+    if(cardCheckbox === true){
+        libraryCard.id = 'read-book';
+    } else {
+        libraryCard.id = 'unread-book';
+    }
+}
 
 
 

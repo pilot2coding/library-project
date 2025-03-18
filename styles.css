@@ -21,10 +21,21 @@ body{
     border: 2px solid black;
     gap: 10px;
     margin: 0.5vw;
+    border-radius: 10px;
+    max-height: auto;
+    max-width: 200px;
 }
 
 #library{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: auto;
+}
+
+#read-book{
+    background-color: green;
+}
+
+#unread-book{
+    background-color: red;
 }
