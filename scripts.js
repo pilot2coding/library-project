@@ -93,16 +93,26 @@ document.querySelector('.button').addEventListener("click", function(){
     }
 })
 
-// book constructor function
+/* book constructor function - deprecated with the class Book
 function Book(title, author, pages, isRead){
     this.title = title;
     this.author = author;
     this.pages = pages;
     this.isRead = isRead;
     this.id = crypto.randomUUID();
+}*/
+
+class Book{
+    constructor(title, author, pages, isRead){
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.isRead = isRead;
+        this.id = crypto.randomUUID();
+    }
 }
 
-// testing books
+// testing books class 
 const onWar = new Book('On War - Volume 1', 'Carl von Clausewitz',
     874, true
 );
